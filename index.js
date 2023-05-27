@@ -87,14 +87,20 @@ app.post("/newPicture", (req, res) => {
 });
 
 app.post("/stop", (req, res) => {
-  command.stdin.setEncoding("utf-8");
-  command.stdout.pipe(process.stdout);
-  command.stdin.cork();
-  command.stdin.write("0\n");
-  command.stdin.uncork();
-  res.send({
-    message: "stopped",
-  });
+  try {
+    command.stdin.setEncoding("utf-8");
+    command.stdout.pipe(process.stdout);
+    command.stdin.cork();
+    command.stdin.write("0\n");
+    command.stdin.uncork();
+    res.send({
+      message: "stopped",
+    });
+  } catch (error) {
+    res.send({
+      message: "error stopping",
+    });
+  }
 });
 
 io.on("connection", (socket) => {

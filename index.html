@@ -58,6 +58,11 @@
       flex-direction: row;
     }
 
+    #x {
+      font-size: 32px;
+      font-weight: 800;
+    }
+
     #messages {
       display: flex;
       flex-direction: column;
@@ -91,6 +96,7 @@
         <button id="stop" type="button">Stop</button>
       </div>
       <button id="take" type="button">Take Picture</button>
+      <p id="x">Accelerometer:</p>
     </form>
     <ul id="messages"></ul>
   </main>
@@ -105,6 +111,9 @@
   var input = document.getElementById('input');
   var stop = document.getElementById('stop');
   var take = document.getElementById('take');
+  var lix = document.getElementById('x');
+  var liy = document.getElementById('y');
+  var liz = document.getElementById('z');
 
   take.addEventListener('click', async (e) => {
     const response = await fetch("/newPicture", {
@@ -148,17 +157,24 @@
   });
 
   socket.on('commandEvent', function (msg) {
+
+
     const messageList = msg.line.split("\r\n")
     messageList.forEach(messageLine => {
-      const item = document.createElement('li');
-      item.textContent = messageLine;
-      if (messageLine.includes('positive')) {
+      if (messageLine.includes("Accelerometer:")) {
+        const list = messageLine.replace("Accelerometer:", "").split(" ");
+        lix.innerText = messageLine
+        return
+      } else if (messageLine.includes("Picture taked") || messageLine.includes("Time to write file")) {
+        const item = document.createElement('li');
+        item.textContent = messageLine;
         const audio = new Audio("./success.mp3");
         audio.play();
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
       }
-      messages.appendChild(item);
     });
-    window.scrollTo(0, document.body.scrollHeight);
+
 
 
   });
