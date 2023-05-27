@@ -152,7 +152,7 @@
     messageList.forEach(messageLine => {
       const item = document.createElement('li');
       item.textContent = messageLine;
-      if (messageLine.includes('Saving recording')) {
+      if (messageLine.includes('positive')) {
         const audio = new Audio("./success.mp3");
         audio.play();
       }
